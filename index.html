@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <title>Recaptcha</title>
+</head>
+<body>
+    <form id="recaptcha">
+        <input type="text" name="name" id="name" placeholder="name">
+        <div class="g-recaptcha" data-sitekey="6Lfie_kUAAAAACG2c9bShoCfR7ov1Setigc9Q6BH"></div>
+        <button type="submit">submit</button>
+
+    </form>
+
+    <script>
+        document.getElementById('recaptcha').addEventListener('submit', submitForm)
+
+        async function submitForm(e){
+            e.preventDefault()
+
+            const name = document.querySelector('#name').value
+            const captcha = document.querySelector('#g-recaptcha-response').value
+
+            let response = await fetch('/submit', {
+                method : 'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-type': 'application/json'
+                },
+                body:JSON.stringify({name, captcha})
+            })
+
+            let data = await response.json()
+            if(response.status === 200)
+                console.log(data)
+        }
+    </script>
+</body>
+</html>
